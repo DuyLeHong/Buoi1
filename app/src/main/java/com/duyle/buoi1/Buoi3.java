@@ -7,8 +7,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,6 +28,7 @@ public class Buoi3 extends AppCompatActivity {
 
     ProgressBar progressBar;
     TextView tvResult;
+    ImageView iv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +38,7 @@ public class Buoi3 extends AppCompatActivity {
         Button btnLoad = findViewById(R.id.btn_load);
         progressBar = findViewById(R.id.progress);
         tvResult = findViewById(R.id.tv1);
+        iv = findViewById(R.id.iv);
 
         btnLoad.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,7 +87,21 @@ public class Buoi3 extends AppCompatActivity {
                 progressBar.setVisibility(View.GONE);
             }
 
-            tvResult.setText(server_response);
+            try {
+                JSONObject jsonObject = new JSONObject(server_response);
+
+                String title = jsonObject.getString("title");
+
+                tvResult.setText(title);
+
+                String url = jsonObject.getString("thumbnailUrl");
+
+                Glide.with(Buoi3.this).load(url).into(iv);
+
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+
 
 
 
